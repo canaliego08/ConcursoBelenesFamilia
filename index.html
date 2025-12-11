@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Torneo de Belenes</title>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #f4f6f9;
+        margin: 0;
+        padding: 0;
+    }
+
+    header {
+        background: #4a90e2;
+        color: white;
+        padding: 20px;
+        text-align: center;
+        font-size: 1.6rem;
+        font-weight: bold;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .top-winner-box {
+        margin: 20px;
+        padding: 15px;
+        background: white;
+        border-radius: 14px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        font-size: 1.2rem;
+        text-align: center;
+    }
+
+    table {
+        width: 94%;
+        margin: 20px auto;
+        border-collapse: collapse;
+        background: white;
+        border-radius: 14px;
+        overflow: hidden;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+
+    th, td {
+        padding: 12px;
+        border-bottom: 1px solid #ddd;
+        text-align: center;
+    }
+
+    th {
+        background: #4a90e2;
+        color: white;
+    }
+
+    tr:hover {
+        background: #eef5ff;
+    }
+
+    img {
+        width: 60px;
+        height: 40px;
+        object-fit: cover;
+        cursor: pointer;
+        border-radius: 6px;
+    }
+
+    /* Modal imagen grande */
+    #modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.8);
+        display: none;
+        justify-content: center;
+        align-items: center;
+    }
+
+    #modal img {
+        width: 90%;
+        max-width: 700px;
+        border-radius: 14px;
+        box-shadow: 0 0 20px black;
+    }
+</style>
+</head>
+<body>
+
+<header>Torneo de Belenes • Familia Cabezón</header>
+
+<div class="top-winner-box" id="topWinner"></div>
+
+<table>
+    <thead>
+        <tr>
+            <th>Año</th>
+            <th>Ganador</th>
+            <th>Descripción</th>
+            <th>Foto</th>
+        </tr>
+    </thead>
+    <tbody id="tabla"></tbody>
+</table>
+
+<!-- Modal para ampliar foto -->
+<div id="modal" onclick="cerrarModal()">
+    <img id="foto-grande">
+</div>
+
+<script>
+const datos = [
+    {año:1990, ganador:"Curra y Luis", descripcion:"Sin definir", foto:"Foto_1990"},
+    {año:1991, ganador:"Curra y Luis", descripcion:"Sin definir", foto:"Foto_1991"},
+    {año:1992, ganador:"Pila y Pepe", descripcion:"Sin definir", foto:"Foto_1992"},
+    {año:1993, ganador:"Gloria y Carlos", descripcion:"Sin definir", foto:"Foto_1993"},
+    {año:1994, ganador:"Gloria y Carlos", descripcion:"Sin definir", foto:"Foto_1994"},
+    {año:1995, ganador:"Curra y Luis", descripcion:"Sin definir", foto:"Foto_1995"},
+    {año:1996, ganador:"Pila y Pepe", descripcion:"Sin definir", foto:"Foto_1996"},
+    {año:1997, ganador:"Pachus y Luis", descripcion:"Sin definir", foto:"Foto_1997"},
+    {año:1998, ganador:"Sole y José", descripcion:"Sin definir", foto:"Foto_1998"},
+    {año:1999, ganador:"Pila y Pepe", descripcion:"Sin definir", foto:"Foto_1999"},
+    {año:2000, ganador:"Gloria y Carlos", descripcion:"Sin definir", foto:"Foto_2000"},
+    {año:2001, ganador:"Curra y Luis", descripcion:"Sin definir", foto:"Foto_2001"},
+    {año:2002, ganador:"Carmen y Cris", descripcion:"Sin definir", foto:"Foto_2002"},
+    {año:2003, ganador:"Curra y Luis", descripcion:"Sin definir", foto:"Foto_2003"},
+    {año:2004, ganador:"nan", descripcion:"nan", foto:"Foto_2004"},
+    {año:2005, ganador:"nan", descripcion:"nan", foto:"Foto_2005"},
+    {año:2006, ganador:"nan", descripcion:"nan", foto:"Foto_2006"},
+    {año:2007, ganador:"nan", descripcion:"nan", foto:"Foto_2007"},
+    {año:2008, ganador:"nan", descripcion:"nan", foto:"Foto_2008"},
+    {año:2009, ganador:"nan", descripcion:"nan", foto:"Foto_2009"},
+    {año:2010, ganador:"nan", descripcion:"nan", foto:"Foto_2010"},
+    {año:2011, ganador:"nan", descripcion:"nan", foto:"Foto_2011"},
+    {año:2012, ganador:"nan", descripcion:"nan", foto:"Foto_2012"},
+    {año:2013, ganador:"nan", descripcion:"nan", foto:"Foto_2013"},
+    {año:2014, ganador:"nan", descripcion:"nan", foto:"Foto_2014"},
+    {año:2015, ganador:"nan", descripcion:"nan", foto:"Foto_2015"},
+    {año:2016, ganador:"nan", descripcion:"nan", foto:"Foto_2016"},
+    {año:2017, ganador:"nan", descripcion:"nan", foto:"Foto_2017"},
+    {año:2018, ganador:"nan", descripcion:"nan", foto:"Foto_2018"},
+    {año:2019, ganador:"Ale y Manu", descripcion:"Belén Griego", foto:"Foto_2019"},
+    {año:2020, ganador:"COVID-19", descripcion:"COVID-19", foto:"Foto_2020"},
+    {año:2021, ganador:"Ale y Manu", descripcion:"Belén Portátil Isla Pirata", foto:"Foto_2021"},
+    {año:2022, ganador:"Noelia y Nacho", descripcion:"Belén de Animales 1º", foto:"Foto_2022"},
+    {año:2023, ganador:"Ale y Manu", descripcion:"Belén de Star Wars", foto:"Foto_2023"},
+    {año:2024, ganador:"Noelia y Nacho", descripcion:"Belén de Animales 2º", foto:"Foto_2024"},
+    {año:2025, ganador:"", descripcion:"", foto:"Foto_2025"}
+];
+
+// Construir tabla
+let tbody = document.getElementById("tabla");
+
+datos.forEach(d => {
+    tbody.innerHTML += `
+    <tr>
+        <td>${d.año}</td>
+        <td>${d.ganador}</td>
+        <td>${d.descripcion}</td>
+        <td><img src="fotos/${d.foto}.jpg" onclick="abrirModal('fotos/${d.foto}.jpg')"></td>
+    </tr>`;
+});
+
+// Contador victorias
+const conteo = {};
+datos.forEach(d => {
+    if (d.ganador && d.ganador !== "nan" && d.ganador !== "") {
+        conteo[d.ganador] = (conteo[d.ganador] || 0) + 1;
+    }
+});
+
+const ganadorTop = Object.entries(conteo).sort((a,b)=>b[1]-a[1])[0];
+
+document.getElementById("topWinner").innerHTML =
+    `🏆 <b>${ganadorTop[0]}</b> son los que más veces han ganado: 
+     <b>${ganadorTop[1]} victorias</b>`;
+
+// Modal
+function abrirModal(ruta) {
+    document.getElementById("foto-grande").src = ruta;
+    document.getElementById("modal").style.display = "flex";
+}
+
+function cerrarModal() {
+    document.getElementById("modal").style.display = "none";
+}
+</script>
+
+</body>
+</html>
