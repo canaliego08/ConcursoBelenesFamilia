@@ -130,21 +130,21 @@ const datos = [
     {año:2001, ganador:"Curra y Luis", descripcion:"Sin definir", foto:"Foto_2001"},
     {año:2002, ganador:"Carmen y Cris", descripcion:"Sin definir", foto:"Foto_2002"},
     {año:2003, ganador:"Curra y Luis", descripcion:"Sin definir", foto:"Foto_2003"},
-    {año:2004, ganador:"nan", descripcion:"nan", foto:"Foto_2004"},
-    {año:2005, ganador:"nan", descripcion:"nan", foto:"Foto_2005"},
-    {año:2006, ganador:"nan", descripcion:"nan", foto:"Foto_2006"},
-    {año:2007, ganador:"nan", descripcion:"nan", foto:"Foto_2007"},
-    {año:2008, ganador:"nan", descripcion:"nan", foto:"Foto_2008"},
-    {año:2009, ganador:"nan", descripcion:"nan", foto:"Foto_2009"},
-    {año:2010, ganador:"nan", descripcion:"nan", foto:"Foto_2010"},
-    {año:2011, ganador:"nan", descripcion:"nan", foto:"Foto_2011"},
-    {año:2012, ganador:"nan", descripcion:"nan", foto:"Foto_2012"},
-    {año:2013, ganador:"nan", descripcion:"nan", foto:"Foto_2013"},
-    {año:2014, ganador:"nan", descripcion:"nan", foto:"Foto_2014"},
-    {año:2015, ganador:"nan", descripcion:"nan", foto:"Foto_2015"},
-    {año:2016, ganador:"nan", descripcion:"nan", foto:"Foto_2016"},
-    {año:2017, ganador:"nan", descripcion:"nan", foto:"Foto_2017"},
-    {año:2018, ganador:"nan", descripcion:"nan", foto:"Foto_2018"},
+    {año:2004, ganador:"Sin definir", descripcion:"Sin definir", foto:"Foto_2004"},
+    {año:2005, ganador:"Sin definir", descripcion:"Sin definir", foto:"Foto_2005"},
+    {año:2006, ganador:"Sin definir", descripcion:"Sin definir", foto:"Foto_2006"},
+    {año:2007, ganador:"Sin definir", descripcion:"Sin definir", foto:"Foto_2007"},
+    {año:2008, ganador:"Sin definir", descripcion:"Sin definir", foto:"Foto_2008"},
+    {año:2009, ganador:"Sin definir", descripcion:"Sin definir", foto:"Foto_2009"},
+    {año:2010, ganador:"Sin definir", descripcion:"Sin definir", foto:"Foto_2010"},
+    {año:2011, ganador:"Sin definir", descripcion:"Sin definir", foto:"Foto_2011"},
+    {año:2012, ganador:"Sin definir", descripcion:"Sin definir", foto:"Foto_2012"},
+    {año:2013, ganador:"Sin definir", descripcion:"Sin definir", foto:"Foto_2013"},
+    {año:2014, ganador:"Sin definir", descripcion:"Sin definir", foto:"Foto_2014"},
+    {año:2015, ganador:"Sin definir", descripcion:"Sin definir", foto:"Foto_2015"},
+    {año:2016, ganador:"Sin definir", descripcion:"Sin definir", foto:"Foto_2016"},
+    {año:2017, ganador:"Sin definir", descripcion:"Sin definir", foto:"Foto_2017"},
+    {año:2018, ganador:"Sin definir", descripcion:"Sin definir", foto:"Foto_2018"},
     {año:2019, ganador:"Ale y Manu", descripcion:"Belén Griego", foto:"Foto_2019"},
     {año:2020, ganador:"COVID-19", descripcion:"COVID-19", foto:"Foto_2020"},
     {año:2021, ganador:"Ale y Manu", descripcion:"Belén Portátil Isla Pirata", foto:"Foto_2021"},
@@ -170,7 +170,7 @@ datos.forEach(d => {
 // Contador victorias
 const conteo = {};
 datos.forEach(d => {
-    if (d.ganador && d.ganador !== "nan" && d.ganador !== "") {
+    if (d.ganador && d.ganador !== "Sin definir" && d.ganador !== "") {
         conteo[d.ganador] = (conteo[d.ganador] || 0) + 1;
     }
 });
@@ -194,5 +194,3 @@ function cerrarModal() {
 
 </body>
 </html>
-
-
