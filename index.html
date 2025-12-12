@@ -80,11 +80,15 @@
     }
 
     #modal img {
-        width: 90%;
-        max-width: 700px;
-        border-radius: 14px;
-        box-shadow: 0 0 20px black;
-    }
+		max-width: 90%;
+		max-height: 90vh;
+		width: auto;
+		height: auto;
+		border-radius: 14px;
+		object-fit: contain;
+		box-shadow: 0 0 20px black;
+	}
+
 </style>
 </head>
 <body>
@@ -174,8 +178,8 @@ datos.forEach(d => {
 const ganadorTop = Object.entries(conteo).sort((a,b)=>b[1]-a[1])[0];
 
 document.getElementById("topWinner").innerHTML =
-    `🏆 <b>${ganadorTop[0]}</b> son los que más veces han ganado: 
-     <b>${ganadorTop[1]} victorias</b>`;
+    `<b>${ganadorTop[0]}:</b> 
+     <b>${ganadorTop[1]} victorias</b> 🏆`;
 
 // Modal
 function abrirModal(ruta) {
@@ -190,3 +194,5 @@ function cerrarModal() {
 
 </body>
 </html>
+
+
