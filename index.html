@@ -71,25 +71,107 @@
         position: fixed;
         top: 0;
         left: 0;
-        width: 100%;
-        height: 100%;
+        width: 100vw;
+        height: 100vh;
         background: rgba(0,0,0,0.8);
         display: none;
         justify-content: center;
         align-items: center;
+        z-index: 9999;
     }
 
     #modal img {
-		max-width: 90%;
-		max-height: 90vh;
-		width: auto;
-		height: auto;
-		border-radius: 14px;
-		object-fit: contain;
-		box-shadow: 0 0 20px black;
+        max-width: 90%;
+        max-height: 90vh;
+        width: auto;
+        height: auto;
+        border-radius: 14px;
+        object-fit: contain;
+        box-shadow: 0 0 20px black;
+    }
+
+    .galeria-btn {
+        background: #4a90e2;
+        color: white;
+        border: none;
+        padding: 8px 14px;
+        border-radius: 20px;
+        cursor: pointer;
+        font-size: 0.9rem;
+    }
+
+    .galeria-btn:hover {
+        background: #357abd;
+    }
+
+    #galeriaModal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0,0,0,0.85);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 9998;
+    }
+
+    .galeria-contenido {
+        background: white;
+        width: 90%;
+        max-height: 90vh;
+        padding: 15px;
+        border-radius: 16px;
+        overflow-y: auto;
+    }
+
+    #galeriaGrid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 10px;
+    }
+
+    .galeria-item {
+        width: 100%;
+        aspect-ratio: 1 / 1;
+        overflow: hidden;
+        border-radius: 12px;
+        cursor: pointer;
+        background: #000;
+    }
+
+    .galeria-item img,
+    .galeria-item video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+	
+	/* Botón cerrar modal */
+	.cerrar-modal {
+		position: absolute;
+		top: 14px;
+		right: 18px;
+		font-size: 26px;
+		color: white;
+		background: rgba(0,0,0,0.6);
+		border: none;
+		border-radius: 50%;
+		width: 44px;
+		height: 44px;
+		cursor: pointer;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.cerrar-modal:hover {
+		background: rgba(0,0,0,0.85);
 	}
 
 </style>
+
 </head>
 <body>
 
@@ -104,14 +186,25 @@
             <th>Ganador</th>
             <th>Descripción</th>
             <th>Foto</th>
+			<th>Galería</th>
         </tr>
     </thead>
     <tbody id="tabla"></tbody>
 </table>
 
 <!-- Modal para ampliar foto -->
-<div id="modal" onclick="cerrarModal()">
-    <img id="foto-grande">
+<div id="modal">
+    <button class="cerrar-modal" onclick="cerrarModal()">✕</button>
+    <img id="modalImg">
+</div>
+
+<div id="galeriaModal">
+    <button class="cerrar-modal" onclick="cerrarGaleria()">✕</button>
+
+    <div class="galeria-contenido">
+        <h2 id="galeriaTitulo"></h2>
+        <div id="galeriaGrid"></div>
+    </div>
 </div>
 
 <script>
@@ -164,6 +257,8 @@ datos.forEach(d => {
         <td>${d.ganador}</td>
         <td>${d.descripcion}</td>
         <td><img src="fotos/${d.foto}.jpg" onclick="abrirModal('fotos/${d.foto}.jpg')"></td>
+		<td><button class="galeria-btn" onclick="abrirGaleria(${d.año})">📸 Ver</button>
+</td>
     </tr>`;
 });
 
@@ -183,18 +278,109 @@ document.getElementById("topWinner").innerHTML =
 
 // Modal
 function abrirModal(ruta) {
-    document.getElementById("foto-grande").src = ruta;
-    document.getElementById("modal").style.display = "flex";
+    const modal = document.getElementById("modal");
+
+    // Limpiar contenido previo
+    modal.innerHTML = "";
+
+    const img = document.createElement("img");
+    img.src = ruta;
+    img.style.maxWidth = "90%";
+    img.style.maxHeight = "90vh";
+    img.style.borderRadius = "14px";
+    img.style.boxShadow = "0 0 20px black";
+
+    modal.appendChild(img);
+    modal.style.display = "flex";
+    modal.onclick = cerrarModal;
 }
 
 function cerrarModal() {
-    document.getElementById("modal").style.display = "none";
+    const modal = document.getElementById("modal");
+    modal.style.display = "none";
+    modal.innerHTML = "";
 }
+
+function abrirGaleria(año) {
+    const grid = document.getElementById("galeriaGrid");
+    grid.innerHTML = "";
+    document.getElementById("galeriaTitulo").innerText = `Galería ${año}`;
+
+    for (let i = 1; i <= 7; i++) {
+        const jpg = `galeria/${año}/Belen_${i}.jpg`;
+        const mp4 = `galeria/${año}/Belen_${i}.mp4`;
+
+        crearMiniatura("img", jpg);
+        crearMiniatura("video", mp4);
+    }
+
+    document.getElementById("galeriaModal").style.display = "flex";
+}
+
+function crearMiniatura(tipo, ruta) {
+    const div = document.createElement("div");
+    div.className = "galeria-item";
+
+    if (tipo === "img") {
+        const img = document.createElement("img");
+        img.src = ruta;
+
+        img.onload = () => {
+            div.onclick = () => abrirEnGrande("img", ruta);
+            div.appendChild(img);
+            document.getElementById("galeriaGrid").appendChild(div);
+        };
+
+        img.onerror = () => {}; // si no existe, no se añade
+    }
+
+    if (tipo === "video") {
+        const video = document.createElement("video");
+        video.src = ruta;
+        video.muted = true;
+        video.playsInline = true;
+
+        video.onloadeddata = () => {
+            div.onclick = () => abrirEnGrande("video", ruta);
+            div.appendChild(video);
+            document.getElementById("galeriaGrid").appendChild(div);
+        };
+
+        video.onerror = () => {};
+    }
+}
+function abrirEnGrande(tipo, ruta) {
+    const modal = document.getElementById("modal");
+
+    // Limpiar contenido anterior
+    modal.innerHTML = "";
+
+    if (tipo === "img") {
+        const img = document.createElement("img");
+        img.src = ruta;
+        img.style.maxWidth = "90%";
+        img.style.maxHeight = "90vh";
+        img.style.borderRadius = "14px";
+        img.style.boxShadow = "0 0 20px black";
+        modal.appendChild(img);
+    } else {
+        const video = document.createElement("video");
+        video.src = ruta;
+        video.controls = true;
+        video.autoplay = true;
+        video.style.maxWidth = "90%";
+        video.style.maxHeight = "90vh";
+        modal.appendChild(video);
+    }
+
+    modal.style.display = "flex";
+    modal.onclick = cerrarModal;
+}
+function cerrarGaleria() {
+    document.getElementById("galeriaModal").style.display = "none";
+}
+
 </script>
 
 </body>
 </html>
-
-
-
-
